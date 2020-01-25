@@ -12,7 +12,6 @@ public class Main {
                 MainWindow frame = new MainWindow("Ye Olde Shoppe - Spring 2020");
             }
         });
-
     }
 
 
