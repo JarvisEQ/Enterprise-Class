@@ -92,7 +92,7 @@ public class MainWindow extends JFrame{
         processItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                
+
                 // if checkItem() worked properly, change button
                 if(checkItem()) {
                     processItem.setEnabled(false);
@@ -119,6 +119,7 @@ public class MainWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 newOrder();
+                processItem.setEnabled(true);
             }
         });
 
