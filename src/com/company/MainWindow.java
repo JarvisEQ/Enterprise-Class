@@ -1,18 +1,31 @@
+/* Name: Liam Jarvis
+ Course: CNT 4714 – Spring 2020
+ Assignment title: Project 1 – Event-driven Enterprise Simulation
+ Date: Sunday January 26, 2020
+*/
+
 package com.company;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class MainWindow extends JFrame{
 
+    String bookID;
+    int quantity;
+    int numBooks;
     int processed = 0;
+    int totalBooks = 0;
+    int discount = 0;
+    float subTotal;
+    float itemCost;
+    DecimalFormat df = new DecimalFormat("0.00");
     Map Order = new HashMap();
     Map names;
     Map prices;
@@ -30,7 +43,7 @@ public class MainWindow extends JFrame{
         //layout manager
         setLayout(new BorderLayout());
 
-        setSize(700, 400);
+        setSize(900, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
@@ -59,6 +72,8 @@ public class MainWindow extends JFrame{
         c.add(buttons, BorderLayout.SOUTH);
 
         //action listeners
+
+        // exits the program
         exitStore.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -66,16 +81,32 @@ public class MainWindow extends JFrame{
             }
         });
 
+        //process an item, makes sure that it can be bought
         processItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                checkItem();
+            }
+        });
+
+        //adds the item to the order
+        confirmItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 addItem();
             }
         });
 
-
+        newOrder.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                newOrder();
+            }
+        });
     }
 
+    //parse in the csv that we are initially using
+    //going to be changed to a DB at some point in the semester
     public void readInText(){
 
         names = new HashMap();
@@ -83,29 +114,30 @@ public class MainWindow extends JFrame{
 
         try{
 
-            Scanner reader = new Scanner(new FileReader(filePath));
-            reader.useDelimiter(",");
+            BufferedReader buffy = new BufferedReader(new FileReader(filePath));
+            String line;
 
-            while(reader.hasNext()){
-                String tmp = reader.next();
+            while((line = buffy.readLine()) != null){
+                String[] values = line.split(",");
 
-                names.put(tmp, reader.next());
-                prices.put(tmp, reader.next());
+                names.put(values[0], values[1]);
+                prices.put(values[0], values[2]);
 
             }
 
-            reader.close();
+            buffy.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void addItem(){
+    // checks that the Item is value and returns the values to the user
+    public void checkItem(){
 
-        String bookID = mainPanel.getBookID();
-        int numBooks = mainPanel.getnumBooks();
-        int quantity = mainPanel.getbookQuantity();
+        bookID = mainPanel.getBookID();
+        numBooks = mainPanel.getnumBooks();
+        quantity = mainPanel.getbookQuantity();
 
         // if there is no more books to add, return without appending orders
         if(numBooks <= processed){
@@ -114,18 +146,74 @@ public class MainWindow extends JFrame{
 
         //if there is no quantity specified, then return
         if(quantity <= 0){
+            JOptionPane.showMessageDialog(null, "Please specify a quantity");
             return;
         }
 
+        //message if there is no book id found
+        if(!prices.containsKey((String)bookID)){
+            JOptionPane.showMessageDialog(null, "Book ID " + bookID + " not in file");
+            return;
+        }
+
+        int tmp = totalBooks + quantity;
+        if(tmp > 9){
+            discount = 15;
+        } else if (tmp > 4){
+            discount = 10;
+        }
+
+        // calculate the item cost
+        itemCost = Float.parseFloat((String) prices.get(bookID));
+        itemCost = (float) ((quantity *  itemCost) * ((100-discount) * 0.01));
+
+        String info = bookID + " " + names.get(bookID) + " " + prices.get(bookID) + " " + quantity + " " + discount + "% $" + df.format(itemCost);
+        mainPanel.setItemInfo(info);
+    }
+
+    public void addItem(){
+
+        //check if an item is already in the Order
+        //if so, we're just going to append the quanity
         if(Order.containsKey(bookID)){
             int tmp = (int) Order.get(bookID);
             quantity += tmp;
         }
 
         Order.put(bookID, quantity);
+        processed++;
 
-        System.out.println(Order);
+        calculateSub();
+        mainPanel.clearForNextItem();
+        JOptionPane.showMessageDialog(null, "Item #" + (processed+1) + " accepted");
+    }
+
+    public void newOrder(){
+
+        Order = new HashMap();
+        processed = 0;
+        totalBooks = 0;
+        mainPanel.clearAll();
+    }
+
+    public void calculateSub(){
+
+        //Zero-out the sub
+        subTotal = 0;
+
+        //Iterate over the Order set to calculate the sub total
+        Iterator orderIte = Order.entrySet().iterator();
+
+        while(orderIte.hasNext()){
+            Map.Entry entry = (Map.Entry) orderIte.next();
+            String key = (String) entry.getKey();
+            int value = entry.setValue();
+
+            Float price = Float.parseFloat(prices.get(key));
+            subTotal += price * key;
+        }
+
+        mainPanel.setSubtotal(String.valueOf(subTotal));
     }
 }
-
 

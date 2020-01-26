@@ -1,3 +1,9 @@
+/* Name: Liam Jarvis
+ Course: CNT 4714 – Spring 2020
+ Assignment title: Project 1 – Event-driven Enterprise Simulation
+ Date: Sunday January 26, 2020
+*/
+
 package com.company;
 
 import javax.swing.*;

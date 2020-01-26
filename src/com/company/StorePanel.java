@@ -1,3 +1,9 @@
+/* Name: Liam Jarvis
+ Course: CNT 4714 – Spring 2020
+ Assignment title: Project 1 – Event-driven Enterprise Simulation
+ Date: Sunday January 26, 2020
+*/
+
 package com.company;
 
 import javax.swing.*;
@@ -19,19 +25,19 @@ public class StorePanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder("Ye Olde Book Store"));
 
         JLabel numBooksLabel = new JLabel("Enter the number of books you wish to buy: ");
-        numBooks = new JTextField(20);
+        numBooks = new JTextField(40);
 
         JLabel bookIDLabel = new JLabel("Enter Book ID");
-        bookID = new JTextField(20);
+        bookID = new JTextField(40);
 
         JLabel bookQuantiyLabel = new JLabel("Enter qauntity");
-        bookQuantity = new JTextField(20);
+        bookQuantity = new JTextField(40);
 
         JLabel itemInfoLabel = new JLabel("Item Info");
-        itemInfo = new JTextField(20);
+        itemInfo = new JTextField(40);
 
         JLabel subtotalLabel = new JLabel("Order Subtotal");
-        subtotal = new JTextField(20);
+        subtotal = new JTextField(40);
 
         setLayout(new GridBagLayout());
 
@@ -104,10 +110,31 @@ public class StorePanel extends JPanel {
 
     public int getbookQuantity(){
         try {
-            return Integer.parseInt(numBooks.getText());
+            return Integer.parseInt(bookQuantity.getText());
         } catch (NumberFormatException e){
             JOptionPane.showMessageDialog(null, "Please enter a number for number of books");
             return 0;
         }
+    }
+
+    public void clearAll(){
+        numBooks.setText("");
+        bookID.setText("");
+        bookQuantity.setText("");
+        itemInfo.setText("");
+        subtotal.setText("");
+    }
+
+    public void setItemInfo(String info){
+        itemInfo.setText(info);
+    }
+
+    public void clearForNextItem(){
+        bookID.setText("");
+        bookQuantity.setText("");
+    }
+
+    public void setSubtotal(String sub){
+        subtotal.setText(sub);
     }
 }
