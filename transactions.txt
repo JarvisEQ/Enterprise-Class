@@ -1,0 +1,8 @@
+260120201644, 1111  "Top Secret Twenty One - Janet Evanovich"  8.99 3 0% $26.97, 26/01/2020 16:44:26 EST
+260120201644, 55555  "Everyday Italian - Giada de Laurentiis"  18.99 2 10% $34.18, 26/01/2020 16:44:26 EST
+260120201649, 234  "The Bourne Identity - Robert Ludlum"  12.95 6 10% $69.93, 26/01/2020 16:49:40 EST
+260120201649, 23411  "Chaos - Patricia Cornwell"  10.75 2 10% $19.35, 26/01/2020 16:49:40 EST
+260120201649, 22222  "W Is For Wasted - Sue Grafton"  9.95 1 10% $8.95, 26/01/2020 16:49:40 EST
+260120201651, 12123  "X - Sue Grafton"  9.99 2 0% $19.98, 26/01/2020 16:51:27 EST
+260120201653, 12277  "Y Is For Yesterday - Sue Grafton"  10.99 2 0% $21.98, 26/01/2020 16:53:15 EST
+260120201653, 77777  "Dust - Patricia Cornwell"  12.99 9 15% $99.37, 26/01/2020 16:53:15 EST
