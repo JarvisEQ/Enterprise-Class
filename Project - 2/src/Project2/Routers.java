@@ -27,7 +27,7 @@ public class Routers implements Runnable{
 
         // saying the things that need to be said
         System.out.println("Station " + this.routerNum + ": In-Connection set to conveyor " + this.routerNum);
-        System.out.println("Station " + this.routerNum + ": Out-Connection set to conveyor " + ((this.routerNum + 1) % (totalRouters + 1)));
+        System.out.println("Station " + this.routerNum + ": Out-Connection set to conveyor " + ((this.routerNum + 1) % totalRouters ));
         System.out.println("Station " + this.routerNum + ": Workload set. Station " + this.routerNum + " has " + this.numberOps + " packages to move");
     }
 
@@ -46,16 +46,13 @@ public class Routers implements Runnable{
             try{
 
                 this.doWork();
-
-
-            }catch (Exception e) {
-                e.printStackTrace();
+                
             } finally {
                 lock1.unlock();
                 lock2.unlock();
             }
 
-            i++
+            i++;
         }
 
         System.out.println("* * Station " + this.routerNum + ": Workload successfully completed. * *");
