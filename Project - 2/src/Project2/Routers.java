@@ -41,29 +41,27 @@ public class Routers implements Runnable{
 
             // lock conveyor one
             lock1.lock();
-            System.out.println("Station " + this.routerNum + ": holds lock on (granted access) to conveyor" + this.routerNum);
 
-            // was getting three-way deadlocks in my program, so I did this
-            // It causes more outputs in the terminal, but it stops those deadlocks
-            // also, it seems to run faster this way?
+            // was getting three-way deadlocks in my program, so I added a random timeout to lock2
             try {
                 // try to lock the second lock
                 if(lock2.tryLock(  (int) Math.random() * 10, TimeUnit.SECONDS)){
-                    System.out.println("Station " + this.routerNum + ": holds lock on (granted access) to conveyor" + ((this.routerNum + 1) % totalRouters));
                 } else {
                     // if we couldn't lock lock2, unlock1 and start again
                     lock1.unlock();
-                    System.out.println("Station " + this.routerNum +": unlocks (released access) to conveyor"  + this.routerNum);
                     continue;
                 }
 
             // need to watch for Interrupts when waiting on lock2, could mess up our day
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 lock1.unlock();
                 continue;
             }
-            try {
 
+            try {
+                // put the print statements here since it would have created a lot of print-outs otherwise
+                System.out.println("Station " + this.routerNum +": unlocks (released access) to conveyor"  + this.routerNum);
+                System.out.println("Station " + this.routerNum + ": holds lock on (granted access) to conveyor" + ((this.routerNum + 1) % totalRouters));
                 this.doWork();
 
             } finally {
@@ -76,10 +74,10 @@ public class Routers implements Runnable{
 
 
             i++;
-            System.out.println("Station " + this.routerNum + ": successfully moves packages on conveyor " + this.routerNum);
+            System.out.println("Station " + this.routerNum + ": has " +(this.numberOps - i) + " package groups left to move.");
         }
 
-        System.out.println("Station " + this.routerNum + ": has " +(this.numberOps - i) + " package groups left to move.");
+        System.out.println("* * Station " + this.routerNum + ": Workload successfully completed. * *");
 
     }
 
