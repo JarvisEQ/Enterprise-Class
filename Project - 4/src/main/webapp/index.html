@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project 4</title>
+</head>
+
+<script>
+
+    function doQuery() {
+
+        let xhr = new XMLHttpRequest();
+        let url = "/Project4/MakeQuery";
+
+        console.log("Im doing the thing");
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+
+                // Print received data from server
+                console.log(xhr.responseText);
+
+            }
+        };
+
+        var query = JSON.stringify({query: document.getElementById("Query").innerHTML});
+        console.log(query);
+        xhr.send(query);
+    }
+
+</script>
+
+<body>
+
+<h1>Project 4, Java Servlet magic</h1>
+
+
+<label>Enter Query here:</label><br>
+<textarea id = "Query"
+          rows = "8"
+          cols = "80">Enter your Query here!</textarea><br>
+<button onclick="doQuery()">Submit Query</button><br>
+
+
+</body>
+</html>
