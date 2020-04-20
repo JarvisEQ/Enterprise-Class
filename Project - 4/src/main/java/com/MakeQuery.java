@@ -5,6 +5,9 @@ import com.google.gson.Gson;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.util.Vector;
 
 
 public class MakeQuery extends javax.servlet.http.HttpServlet {
@@ -15,12 +18,33 @@ public class MakeQuery extends javax.servlet.http.HttpServlet {
         Gson gson = new Gson();
         Query query;
 
+        StringBuffer jb = new StringBuffer();
+        String line = null;
 
-        response.setContentType("text/json");
+        try {
+            BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null){
+                jb.append(line);
+            }
 
-        query = gson.fromJson()
+            Query obj = gson.fromJson(jb.toString(), Query.class);
 
-        response.getWriter().println("Servlet wrote this! (Test.java)");
+            System.out.println(obj.getQuery());
+
+            Vector<Vector<Object>> data = obj.doQuery();
+            String reponseJSON = gson.toJson(data);
+
+            PrintWriter out = response.getWriter();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            out.print(reponseJSON);
+            out.flush();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //response.getWriter().println("Servlet wrote this! (Test.java)");
 
     }
 

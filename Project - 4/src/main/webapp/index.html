@@ -12,8 +12,6 @@
         let xhr = new XMLHttpRequest();
         let url = "/Project4/MakeQuery";
 
-        console.log("Im doing the thing");
-
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -21,17 +19,90 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
 
                 // Print received data from server
-                console.log(xhr.responseText);
+                let table = JSON.parse(xhr.responseText);
+
+                console.log(table);
+                console.log(table.length);
+                // if this is empty, we can assume there is an error with the SQL statement
+                if (table === undefined || table.length == 1){
+
+                    document.getElementById("response").innerHTML = "";
+                    let node = document.createElement("H3");
+                    let errorStatement = document.createTextNode("Error with SQL Statement");
+                    node.appendChild(errorStatement);
+                    document.getElementById("response").appendChild(node);
+
+                } else {
+
+                    document.getElementById("response").innerHTML = "";
+                    let node = document.createElement("H3");
+                    let errorStatement = document.createTextNode("Query Successful, Showing results");
+                    node.appendChild(errorStatement);
+                    document.getElementById("response").appendChild(node);
+
+                    // this makes tables
+                    createTable(table)
+
+                }
 
             }
         };
 
-        var query = JSON.stringify({query: document.getElementById("Query").innerHTML});
+        let query = JSON.stringify({query: document.getElementById("Query").value});
         console.log(query);
         xhr.send(query);
     }
 
+    function createTable(tableData) {
+
+        // remove the table if it is already here
+        let table = document.getElementById("main_table");
+        if( table != null) {
+            table.remove();
+        }
+
+        table = document.createElement('table');
+        table.id = "main_table"
+        let tableBody = document.createElement('tbody');
+
+        tableData.forEach(function(rowData) {
+            let row = document.createElement('tr');
+
+            rowData.forEach(function(cellData) {
+                let cell = document.createElement('td');
+                cell.appendChild(document.createTextNode(cellData));
+                row.appendChild(cell);
+            });
+
+            tableBody.appendChild(row);
+        });
+
+        table.appendChild(tableBody);
+        document.body.appendChild(table);
+    }
+
 </script>
+
+<style>
+
+    table{
+        background-color: aliceblue;
+        table-layout: auto;
+        width: 80%;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    body{
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+        background-color: burlywood;
+    }
+
+</style>
 
 <body>
 
@@ -44,6 +115,7 @@
           cols = "80">Enter your Query here!</textarea><br>
 <button onclick="doQuery()">Submit Query</button><br>
 
+<div id="response"></div>
 
 </body>
 </html>
